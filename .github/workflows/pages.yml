@@ -22,10 +22,12 @@ jobs:
         run: |
           node --check script.js
           node --check config.js
+          node --check catalogue-data.js
       - name: Prepare public website
         run: |
           mkdir -p _site
-          cp index.html styles.css script.js config.js _site/
+          cp index.html styles.css script.js config.js catalogue-data.js _site/
+          cp -R assets _site/assets
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

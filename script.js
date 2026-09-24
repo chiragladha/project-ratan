@@ -13,6 +13,7 @@ const products = [
   {id:'paint',name:'Interior paints',category:'Wall finishes',spec:'Colour, coverage and wall preparation to confirm',unit:'litres',tone:'#d89b80'},
   {id:'wallpaper',name:'Wallpaper & digital prints',category:'Wall finishes',spec:'Custom wall dimensions · artwork approval',unit:'sq ft',look:'walls'}
 ];
+products.push(...(window.RATAN_CATALOGUE || []));
 const bundles = [
   {name:'The wardrobe edit',description:'Boards + laminate + fittings',items:['ply','wood','hinge','adhesive']},
   {name:'The living room layer',description:'Surfaces + walls + lighting',items:['ply','solid','light','wallpaper']},
@@ -25,9 +26,9 @@ function node(tag,text,className){const el=document.createElement(tag);if(text!=
 function add(id){shortlist.set(id,(shortlist.get(id)||0)+1);renderList();renderProducts();}
 function renderProducts(){
   const query=$('#search').value.toLowerCase().trim();
-  const found=products.filter(p=>(selectedCategory==='All'||p.category===selectedCategory)&&`${p.name} ${p.spec}`.toLowerCase().includes(query));
+  const found=products.filter(p=>(selectedCategory==='All'||p.category===selectedCategory)&&`${p.name} ${p.spec} ${p.brand||''} ${p.finish||''}`.toLowerCase().includes(query));
   $('#products').replaceChildren();
-  found.forEach(p=>{const card=node('article',undefined,'product');const sample=node('div',undefined,`sample ${p.look||''}`);if(p.tone)sample.style.setProperty('--tone',p.tone);sample.setAttribute('aria-hidden','true');card.append(sample,node('small',p.category.toUpperCase()),node('h3',p.name),node('p',p.spec));const btn=node('button',shortlist.has(p.id)?`In your list (${shortlist.get(p.id)}) · Add more +`:'Add to sourcing list +');btn.addEventListener('click',()=>add(p.id));card.append(btn);$('#products').append(card);});
+  found.forEach(p=>{const card=node('article',undefined,'product');const sample=node('div',undefined,`sample ${p.look||''}`);if(p.tone)sample.style.setProperty('--tone',p.tone);if(p.image){sample.classList.add('real-sample');const img=node('img');img.src=p.image;img.alt=`${p.name} catalogue swatch`;img.loading='lazy';img.width=300;img.height=200;sample.append(img);}else sample.setAttribute('aria-hidden','true');card.append(sample,node('small',p.category.toUpperCase()),node('h3',p.name),node('p',p.spec));if(p.image){const detail=node('button','View design & source ↗');detail.addEventListener('click',()=>showDesign(p));card.append(detail);}const btn=node('button',shortlist.has(p.id)?`In your list (${shortlist.get(p.id)}) · Add more +`:'Add to sourcing list +');btn.addEventListener('click',()=>add(p.id));card.append(btn);$('#products').append(card);});
   $('#result-count').textContent=`${found.length} material options`;
   $('#empty').hidden=found.length>0;
 }
@@ -44,6 +45,7 @@ function renderList(){
 $('#open-list').addEventListener('click',()=>$('#list-dialog').showModal());
 $('#quote-list').addEventListener('click',()=>{const brief=[...shortlist].map(([id,q])=>{const p=products.find(p=>p.id===id);return `${p.name}: ${q} ${p.unit} (specification to confirm)`;}).join('\n');$('#list-dialog').close();openEnquiry('Material list',brief);});
 function openEnquiry(kind,brief=''){
+  if(!brief && shortlist.size)brief=[...shortlist].map(([id,q])=>{const p=products.find(p=>p.id===id);return `${p.name}: ${q} ${p.unit}`;}).join('\n');
   const form=$('#enquiry-form');form.elements.kind.value=kind;form.elements.requirement.value=brief;$('#business-label').hidden=kind!=='Supplier application';form.elements.business.required=kind==='Supplier application';$('#enquiry-title').textContent=kind==='Supplier application'?'Supply with Ratan.':'Let’s source it.';$('#form-status').textContent='';$('#enquiry-dialog').showModal();
 }
 document.querySelectorAll('[data-enquiry]').forEach(b=>b.addEventListener('click',()=>openEnquiry(b.dataset.enquiry)));
@@ -66,3 +68,21 @@ enquiryForm.addEventListener('submit',event=>{
   $('#form-status').textContent='Opening your submission receipt. Check that tab for confirmation; your details remain here if you need to retry.';
 });
 renderProducts();renderList();
+
+function showDesign(p){
+  const panel=$('#design-detail');panel.replaceChildren();
+  const img=node('img');img.src=p.image;img.alt=p.name;img.className='detail-swatch';
+  panel.append(node('p',p.brand+' / CATALOGUE PREVIEW','eyebrow'),node('h2',p.name),img,node('p',p.spec),node('p','Size, thickness, stock and price are confirmed by Ratan. Printed sample dimensions are not sheet dimensions. Approve a physical sample before ordering.'));
+  const source=node('a','View original catalogue spread ↗','text-link');source.href=p.sourceImage;source.target='_blank';source.rel='noopener noreferrer';
+  const addButton=node('button','Add this design to my list +','button');addButton.addEventListener('click',()=>{add(p.id);$('#design-dialog').close();$('#list-dialog').showModal();});
+  panel.append(node('p','Source: INSTER-20-01-26.pdf · PDF page '+p.sourcePage),source,node('br'),addButton);$('#design-dialog').showModal();
+}
+$('#help-choose').addEventListener('click',()=>$('#guide-dialog').showModal());
+$('#material-guide').addEventListener('submit',e=>{
+  e.preventDefault();const d=new FormData(e.currentTarget);const wet=d.get('use').includes('moisture');
+  const advice=wet?'Discuss moisture exposure, edge sealing and a suitable water-resistant board with your carpenter. A decorative laminate is not a substitute for waterproof construction.':'Discuss load, span, thickness and a suitable interior board grade with your carpenter.';
+  const brief='Material guidance\nUse: '+d.get('use')+'\nFinish: '+d.get('finish')+'\nPriority: '+d.get('priority')+'\nFinal grade, dimensions and quantity to confirm.';
+  const panel=$('#guide-result');panel.replaceChildren(node('h3','Your starting point'),node('p',advice),node('p','Choose a physical finish sample next. This guide is rules-based, not an engineering specification.'));
+  const browse=node('button','Browse matching laminates →','button');browse.addEventListener('click',()=>{selectedCategory='Laminates';$('#search').value=d.get('finish')==='Plain colour'?'Plain Color':d.get('finish')==='Woodgrain'?'Suede Finish':'';$('#filters').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.textContent==='Laminates')));renderProducts();$('#guide-dialog').close();$('#catalogue').scrollIntoView();});
+  const discuss=node('button','Discuss this brief →','text-link');discuss.addEventListener('click',()=>{$('#guide-dialog').close();openEnquiry('Material guidance',brief);});panel.append(browse,discuss);
+});
