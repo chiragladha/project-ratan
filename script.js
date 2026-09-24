@@ -167,14 +167,15 @@ function openEnquiry(kind,brief=''){
     const input=node(type==='textarea'?'textarea':'input');
     input.name='entry_'+key;input.required=required;
     input.maxLength=key==='requirement'?4000:key==='name'?100:150;
-    if(type==='textarea'){input.rows=key==='location'?2:4;input.minLength=key==='requirement'?10:3;}
+    if(type==='textarea'){input.rows=key==='location'?2:4;input.minLength=2;}
     else input.type=type;
-    if(key==='phone'){input.pattern='[+0-9 ()-]{10,20}';input.maxLength=20;input.autocomplete='tel';input.inputMode='tel';}
+    if(key==='phone'){input.autocomplete='tel-national';input.inputMode='numeric';input.setAttribute('aria-label',title);}
     if(key==='name')input.autocomplete='name';
     if(key==='business')input.autocomplete='organization';
     if(key==='timeline')input.placeholder='e.g. Next month — leave blank if unsure';
     if(key==='requirement')input.placeholder=mode==='supplier'?'Materials, brands and categories you supply':'Materials, sizes or the project you have in mind';
     label.append(input);$('#enquiry-fields').append(label);
+    if(key==='phone')window.RatanExperience.attachPhone(input,label);
   });
   $('#form-status').textContent='';$('#enquiry-dialog').showModal();
 }
@@ -182,7 +183,7 @@ $$('[data-enquiry]').forEach(b=>b.addEventListener('click',()=>openEnquiry(b.dat
 $$('dialog .close').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
 $('#privacy').addEventListener('click',()=>$('#privacy-dialog').showModal());
 $('#menu').addEventListener('click',()=>{const open=$('#links').classList.toggle('open');$('#menu').setAttribute('aria-expanded',String(open));});
-$('#links').addEventListener('click',()=>{$('#links').classList.remove('open');$('#menu').setAttribute('aria-expanded','false');});
+$('#links').addEventListener('click',event=>{if(event.target.closest('a')){$('#links').classList.remove('open');$('#menu').setAttribute('aria-expanded','false');}});
 const planner=$('#planner');
 planner.elements.room.addEventListener('change',()=>{
   const other=planner.elements.room.value==='Other';
@@ -213,14 +214,15 @@ $('#material-guide').addEventListener('submit',e=>{
     button('Discuss this brief →',()=>{$('#guide-dialog').close();openEnquiry('Material guidance',brief);},'text-link'));
 });
 const enquiryForm=$('#enquiry-form');
-enquiryForm.addEventListener('submit',event=>{
+enquiryForm.addEventListener('submit',async event=>{
+  event.preventDefault();
   if(!enquiryForm.checkValidity()){event.preventDefault();enquiryForm.reportValidity();return;}
   const endpoint=window.RATAN_CONFIG?.enquiryEndpoint;
   if(!endpoint||enquiryForm.elements.website.value){event.preventDefault();$('#form-status').textContent='Submission unavailable. Please call or WhatsApp Ratan.';return;}
   const read=k=>enquiryForm.elements['entry_'+k]?.value.trim()||'';
   const mode=modeFor(activeKind),data={
     name:mode==='supplier'?read('business'):read('name')||'Not provided',
-    phone:read('phone'),business:read('business'),
+    phone:window.RatanExperience.phoneValue(enquiryForm),business:read('business'),
     location:read('location')||'To confirm — not provided',quantity:read('quantity'),timeline:read('timeline'),
     kind:activeKind,source:'Ratan website / '+activeKind
   };
@@ -233,7 +235,22 @@ enquiryForm.addEventListener('submit',event=>{
   const fingerprint=JSON.stringify(data);
   if(fingerprint!==submissionFingerprint){enquiryForm.elements.requestId.value=crypto.randomUUID?crypto.randomUUID():'ratan-'+Date.now()+'-'+Math.random().toString(36).slice(2);submissionFingerprint=fingerprint;}
   Object.entries(data).forEach(([k,v])=>{enquiryForm.elements[k].value=v;});
-  enquiryForm.action=endpoint;
-  $('#form-status').textContent='Opening your receipt. Check that tab for confirmation. If Google asks you to sign in or refuses access, please call or WhatsApp Ratan.';
+  const submit=enquiryForm.querySelector('[type=submit]');
+  if(submit.disabled)return;
+  submit.disabled=true;$('#form-status').textContent='Sending your enquiry…';
+  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),25000);
+  try{
+    const body=new URLSearchParams(new FormData(enquiryForm));
+    const response=await fetch(endpoint,{method:'POST',body,signal:controller.signal,credentials:'omit',redirect:'follow'});
+    const result=await response.json();
+    if(!response.ok||result.ok!==true||result.requestId!==enquiryForm.elements.requestId.value||!result.reference){
+      throw new Error(result.message||'We could not confirm the save. Your details are still here; please retry.');
+    }
+    window.RatanExperience.confirm(result.reference);
+    $('#form-status').textContent='Enquiry received.';
+  }catch(error){
+    $('#form-status').textContent=error.name==='SyntaxError'||error.name==='TypeError'||error.name==='AbortError'
+      ?'We couldn’t confirm receipt just now. Your details are still here. Retry safely, or call us for help.' : error.message;
+  }finally{clearTimeout(timeout);submit.disabled=false;}
 });
 renderProducts();renderList();
