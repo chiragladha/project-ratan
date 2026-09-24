@@ -26,6 +26,7 @@ jobs:
           for f in script.js experience.js config.js catalogue-data.js brochure/studio.js brochure/pdf.js; do node --check "$f"; done
           npm install --prefix tests --ignore-scripts
           node tests/flows.cjs
+          node tests/pdf.cjs
       - name: Prepare public website
         run: |
           mkdir -p _site

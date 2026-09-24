@@ -71,3 +71,11 @@ Before paid growth: assign every lead an owner and follow-up; approve physical s
 - September24 flow2: collections, separate lead forms, planner and contact options.
 - September24 flow3 (b8a4df4): inline receipt, phone picker and compact navigation; live test rows checked.
 - September25 QC4: revised WhatsApp vector, mobile contact alignment, persisted shortlist, direct PDF, brochure deployment, Opus/GTM docs and this ledger. Pages404 reproduced; failed job retried; owner confirmed Source=GitHub Actions. Final publication result follows verification.
+
+### Verified publication and final QC — September25
+
+- Commit 2af1f736 deployed successfully in Actions run36047813863. Both homepage and /brochure/ load; the earlier404 is resolved after Pages configuration and the successful rerun/release.
+- Download PDF clicked on the live generator: actual PDF downloaded with three selected INSTER images. All six pages rendered and checked; no missing images. Browser preview at390px has no horizontal overflow.
+- Main contact section inspected at351px: phone, WhatsApp and Maps actions remain on one line with48px+ targets. Follow-up fix hides the floating Ask Ratan shortcut while contact is visible so it cannot cover these links.
+- Guided-room enquiry from September24 confirmed in Sheet with a reference. Fresh QC4 callback submitted on the live site returned an inline receipt; no new tab. Test reference cross-checked against the Sheet.
+- Added local-storage privacy explanation, persistent catalogue selector state and PDF binary/pagination tests to Actions. These small follow-up fixes form QC5.

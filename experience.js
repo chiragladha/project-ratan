@@ -21,6 +21,9 @@ window.RatanExperience={
   }
 };
 document.addEventListener('DOMContentLoaded',()=>{
+  // The floating shortcut must never sit on top of the direct contact actions.
+  const contact=document.getElementById('contact'),floating=document.querySelector('.ask-ratan');
+  if(contact&&floating&&'IntersectionObserver' in window)new IntersectionObserver(entries=>{floating.hidden=entries[0].isIntersecting;},{threshold:0}).observe(contact);
   // Native disclosures keep every section addressable without a long initial scroll.
   document.querySelector('section.split').id='business';document.querySelector('section.faq').id='questions';
   const sections=[['bundles','Room bundles','A checklist for your space'],['catalogue','Material library','Browse categories and explore designs'],['studio','Plan your space','A guided starting point'],['about','Why Ratan','How our sourcing desk works'],['business','For businesses','Bulk sourcing & supply partnerships'],['questions','Questions, answered','Buying, delivery & privacy']];
