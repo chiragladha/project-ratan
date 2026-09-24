@@ -49,6 +49,11 @@ Private working inbox: ../feedback/OPUS-FEEDBACK.md (excluded from website publi
 - Verified test enquiry in Sheets row 2; receiver then served older seven-column implementation.
 
 ## Pending owner inputs
-- Confirm whether Only me refers to Sheet sharing or Apps Script web-app access.
-- Delivery guarantee terms; supplier asset usage permission for wider commercial promotion.
-- Domain choice and renewal budget; Opus feedback; further catalogues.
+- Current status is maintained in [REQUESTS-AND-CHANGELOG.md](REQUESTS-AND-CHANGELOG.md), superseding stale historical receipt/access notes above.
+- Receiver access was corrected and confirmed with test rows; Opus feedback has been reviewed in OPUS-REVIEW.md.
+- Delivery guarantee terms; supplier asset usage rights; domain and renewal budget; further catalogues; genuine business photos/hours; notification recipient.
+
+### 2026-09-25 QC4
+- Direct PDF exporter, standalone brochure studio, private draft handoff, Opus assessment and Ahmedabad market plan added.
+- WhatsApp SVG and mobile contact alignment corrected; shortlist IDs/quantities now persist without contact data.
+- Full request ledger documents implemented, partial, deferred and owner-dependent work. See SETUP.md for current deployment and Sheet instructions.

@@ -18,17 +18,21 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Validate JavaScript
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate JavaScript and flows
         run: |
-          node --check script.js
-          node --check experience.js
-          node --check config.js
-          node --check catalogue-data.js
+          for f in script.js experience.js config.js catalogue-data.js brochure/studio.js brochure/pdf.js; do node --check "$f"; done
+          npm install --prefix tests --ignore-scripts
+          node tests/flows.cjs
       - name: Prepare public website
         run: |
           mkdir -p _site
           cp index.html styles.css script.js config.js catalogue-data.js experience.js _site/
           cp -R assets _site/assets
+          cp -R brochure _site/brochure
+          rm _site/brochure/sheet-menu.gs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

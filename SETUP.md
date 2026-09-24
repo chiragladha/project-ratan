@@ -1,35 +1,31 @@
-# Ratan prototype handoff
+# Ratan setup and operations
 
-## Website and deployment
+Updated 25 September 2026. See [REQUESTS-AND-CHANGELOG.md](REQUESTS-AND-CHANGELOG.md) for completion status and outstanding work.
 
-Publish index.html, styles.css, script.js and config.js together at the repository root (relative paths support GitHub Pages project sites). No build step is required. No credentials or enquiry records belong in Git.
+## Publishing
 
-## Google Sheets receiver — update required
+Repository: chiragladha/project-ratan. Settings → Pages → Source: GitHub Actions. Main-branch changes run the Publish Ratan workflow, validating and publishing the website and /brochure/. Do not run a competing branch/Jekyll source. Always check the actual URLs after deployment. The September25 404 was reproduced; the built-in deployment reported Pages not enabled. Owner confirmed Actions source on September25.
 
-The endpoint in config.js is configured, but its deployed code has not been verified or updated remotely. The old receiver does not save the new lead metadata or enforce the new validation. In the existing Apps Script project, replace its code with google-apps-script.js. Select Deploy → Manage deployments → Edit → New version → Deploy, keeping the same URL. Execute as your account and allow Anyone to submit; keep the spreadsheet itself Restricted, shared only with your team.
+## Enquiry receiver
 
-The website uses a regular POST to a separate receipt tab. It does not infer success from an opaque no-cors response. The updated receiver returns confirmation only after a row is written; failures return an explicit error. If an older deployment returns JSON, `ok: true` is its receipt, but the safeguards here are not active until redeployment.
+The deployed receiver has been verified with labelled test leads. google-apps-script.js is its source, not the website JavaScript. For future changes, replace code in the EXISTING Apps Script project, then Deploy → Manage deployments → Edit → New version → Deploy. Execute as owner, access Anyone; keep the Sheet Restricted. GitHub commits do not update Apps Script.
 
-Submit a clearly labelled test lead after deployment, verify the receipt and its corresponding sheet row, and test invalid input. Do not advertise live collection until this round-trip succeeds. No real customer information has been used for testing here.
+The website posts using fetch. Only a confirmed server save with matching request ID and reference opens the on-page success dialog. No new receipt tab or opaque no-cors success assumption. An uncertain failure retains the form and retry ID. Material-word references are not credentials.
 
-## Follow-up workflow
+The Enquiries tab has17 columns including Lead ID, Type, Business, Timeline, Consent, Status, Owner, Next follow-up, Notes and Reference. Desk workflow: New → Contacted → Scoping → Quote sent → Won/Lost. Assign owner and follow-up manually. No automatic alerts are enabled.
 
-The Enquiries tab retains the original seven columns and adds Lead ID, Type, Business, Timeline, Consent, Status, Owner, Next follow-up and Notes. New leads start at New. The desk assigns an owner and next follow-up date, updates Status (Contacted / Scoping / Quote sent / Won / Lost), and records notes. Supplier applications are a separate Type, never a public directory. This is a Sheet workflow, not an authenticated admin portal or automatic reminder system.
+## PDF proposals
 
-## Security boundaries
+Open /brochure/, enter reference/customer/expiry, choose alternatives and actual prices, review specifications/tax/delivery, check the review box, then Download PDF. A finished A4 file downloads directly; no printing required. Keep a private JSON draft for revisions. Customer data stays in-browser unless explicitly exported. Never commit customer PDFs/drafts.
 
-HTTPS protects transmission. The receiver does not expose rows or spreadsheet reads. Validation, field limits, a honeypot, serialized writes, duplicate request IDs and a short per-phone throttle reduce accidental duplicates and basic abuse. All submitted values are written as text to avoid spreadsheet formula injection. These controls do not stop determined bots: the endpoint is public and Apps Script has quotas. Add server-validated CAPTCHA and stronger rate limits before public traffic grows. Do not put API keys or a supposed secret token into config.js.
+Optional Sheet handoff: add brochure/sheet-menu.gs as a SEPARATE script file, merge any existing onOpen, reload the Sheet, select a lead → Ratan → Export selected enquiry. Import its JSON into the studio. Menu installation is not done remotely. This is not live synchronisation; authenticated staff lookup/writeback is a later feature. Do not publish lead rows via a public GET endpoint.
 
-Keep Google sharing Restricted and enable account two-step verification. Collect basic contact/project details only; avoid payment data, IDs and private documents. Establish a retention/deletion policy and a public contact address before launch. Current website copy explains enquiry use and requires consent to contact.
+## Security and limits
 
-## Prototype boundaries
+HTTPS, restricted Sheet access, validation, text-safe writes, honeypot, short per-phone throttle, idempotency and locking reduce common risks. They do not stop determined bots/quota exhaustion. Add server-verified abuse controls, staff access policy, retention/deletion rules and monitoring before scaled acquisition. Never embed keys in GitHub Pages. The preselected checkbox is for this enquiry, not unsolicited marketing; obtain appropriate privacy review before wider launch.
 
-Catalogue entries are material types, not validated supplier stock or brand SKUs. No fabricated prices, supplier ratings or delivery guarantees are shown. Shortlists stay in page memory; refreshing clears them. Guided planning is deterministic, not a connected LLM. Its finish calculation is front width × height, plus 15%, divided by 32 sq ft for an 8×4 sheet; this is not a carcass or full room BOQ. True LLM assistance needs a server-held API key and reviewable structured output.
+Shortlist storage contains material IDs/quantities only, not names, phones or enquiry text. Phone validation checks shape, not ownership. Fourteen INSTER designs are reviewed; stock/rates/batches require confirmation. The planner is deterministic, not a full BOQ or LLM. Turnaround and fulfilment are qualified targets, not unconditional guarantees. Direct PDFs support English/Latin text; unsupported scripts fail explicitly. No credit, checkout, payments or authenticated CRM.
 
-## Research direction
+## Domain
 
-- https://kyzo.in/ — accessible category/brand discovery and contractor orientation.
-- https://hinch.in/ — guided human assistance alongside material discovery.
-- https://www.eightbyfour.com/ — material-list procurement and unified quoting.
-
-Ratan's MVP: browse or assemble a requirement → capture a lead → Ratan clarifies and sources → desk follows up with a coordinated quote. Existing laminate trading experience anchors the positioning; additional categories are sourced on request.
+No domain bought. Compare registration AND renewal with taxes. After selection, configure the domain in Pages, then registrar DNS, verify ownership and HTTPS. Main-branch changes continue publishing to that domain.

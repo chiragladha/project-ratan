@@ -23,6 +23,8 @@ const bundles = [
   {name:'The room refresh',description:'Colour + comfort + details',items:['paint','fan','switch','light']}
 ];
 const shortlist = new Map();
+try{const saved=JSON.parse(localStorage.getItem('ratan-shortlist-v1')||'[]');if(Array.isArray(saved))saved.slice(0,100).forEach(([id,qty])=>{if(products.some(p=>p.id===id)&&Number.isFinite(qty)&&qty>0)shortlist.set(id,Math.min(100000,Math.round(qty)));});}catch{}
+function saveList(){try{localStorage.setItem('ratan-shortlist-v1',JSON.stringify([...shortlist]));}catch{}}
 let selectedCategory='All', collectionFinish='', designPage=0, detailFromCollection=false;
 let activeKind='General enquiry', activeBrief='', submissionFingerprint='';
 const PAGE_SIZE=6;
@@ -89,6 +91,7 @@ function listBrief(){
   }).join('\n');
 }
 function renderList(){
+  saveList();
   $('#count').textContent=shortlist.size;$('#list-items').replaceChildren();
   if(!shortlist.size)$('#list-items').append(node('p','Your list is empty. Browse materials or choose a room bundle.'));
   for(const [id,qty] of shortlist){
@@ -97,7 +100,7 @@ function renderList(){
     const label=node('label',p.unit),input=node('input');
     input.type='number';input.min='1';input.max='100000';input.step='1';input.value=qty;
     input.setAttribute('aria-label',p.name+' quantity in '+p.unit);
-    input.addEventListener('change',()=>{const value=Math.max(1,Math.min(100000,Math.round(Number(input.value)||1)));shortlist.set(id,value);input.value=value;renderProducts();});
+    input.addEventListener('change',()=>{const value=Math.max(1,Math.min(100000,Math.round(Number(input.value)||1)));shortlist.set(id,value);saveList();input.value=value;renderProducts();});
     label.append(input);
     const remove=button('×',()=>{shortlist.delete(id);renderList();renderProducts();});
     remove.setAttribute('aria-label','Remove '+p.name);row.append(title,label,remove);$('#list-items').append(row);
