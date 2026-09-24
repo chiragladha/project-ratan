@@ -79,3 +79,7 @@ Before paid growth: assign every lead an owner and follow-up; approve physical s
 - Main contact section inspected at351px: phone, WhatsApp and Maps actions remain on one line with48px+ targets. Follow-up fix hides the floating Ask Ratan shortcut while contact is visible so it cannot cover these links.
 - Guided-room enquiry from September24 confirmed in Sheet with a reference. Fresh QC4 callback submitted on the live site returned an inline receipt; no new tab. Test reference cross-checked against the Sheet.
 - Added local-storage privacy explanation, persistent catalogue selector state and PDF binary/pagination tests to Actions. These small follow-up fixes form QC5.
+
+### Browser-tab branding
+
+- Added the lime Ratan monogram as the SVG favicon for both the main website and brochure studio, replacing the browser’s generic globe. Relative asset links work under GitHub Pages and standalone brochure hosting.
