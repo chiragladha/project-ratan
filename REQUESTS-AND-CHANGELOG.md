@@ -4,6 +4,8 @@
 
 This section supersedes older brochure-status rows below.
 
+Verification follow-up (25 September 2026): GitHub Pages run 36078001963 completed successfully. Live Contact → Ask Ratan opens the in-page enquiry dialog. Public staff gateway shows setup pending and exposes no editor or reference input. A five-page PDF was generated using the actual deployed DM Sans / Instrument Serif fonts and every page was rendered and visually checked; portrait swatch proportions, totals and pagination checked. Private Google sign-in, live lookup and PriceBook remain unverified until owner deployment. Quantity/project-size notes and enquiry type are preserved in the imported brief. Standalone comparisons are capped at six added options; complete requirement lists support 100 lines without silent truncation.
+
 | New request | Implementation / activation status |
 | --- | --- |
 | Password or access protection | Owner chose Google sign-in. Separate Apps Script staff app prepared with allowlist and identity check on every read; public brochure URL becomes a sign-in gateway. **Activation pending** owner deployment, allowlist and /exec URL. Not claimed live-authenticated yet. No password/token embedded in public code. |
