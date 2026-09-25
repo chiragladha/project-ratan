@@ -1,30 +1,21 @@
-# Ratan Brochure Generator
+# Ratan Staff Brochure Studio
 
-Standalone, static in-house proposal builder. Open index.html or serve this directory with any static host. It runs independently of the main Ratan website.
+The public /brochure/ URL is now a Google staff sign-in gateway. The protected app source is in internal/Code.gs and internal/Studio.html, **not** included as a page in the public Pages artifact. See [the activation guide](../internal/SETUP.md).
 
-## Working now
+## Activation status
 
-- Customer/project and existing enquiry reference; revision and quote expiry.
-- Up to six alternative materials with specification, quantity, unit rate, variable item tax, tax-inclusive delivery and availability.
-- Laminate/board/custom presets; photo uploads for a real room cover and individual options.
-- Branded cover, comparison summary, one detail page per alternative.
-- Direct PDF download using locally vendored jsPDF 4.2.1 (MIT license retained). This is a proposal, not a tax invoice or an order acceptance.
-- Download/reimport a private JSON draft. Customer details are not sent to a server, URL, analytics or browser storage.
+Prepared and unit-tested, not yet deployed to Google. Owner must create a SEPARATE Apps Script project, configure the private allowlist/Sheet ID, deploy executing as User accessing the web app, and provide the /exec URL for staff-config.js. Do not replace the public enquiry receiver. No fake client-side password gate is used; source remains public while private reads require server checks.
 
-## Private Google Sheet handoff
+## Workflow
 
-Add sheet-menu.gs as a separate file in the spreadsheet-bound Apps Script editor. It does NOT replace the enquiry receiver. Merge onOpen if one already exists, then reload the Sheet. Select an Enquiries row → Ratan → Export selected enquiry. Download and import into the generator. Only the reference, customer name and requirement are included; the phone is not needed for a brochure. Menu installation requires the Sheet owner; it is supplied but not remotely installed.
+Load enquiry reference → review every imported request line → complete quantities/units/specifications → suggest exact current PriceBook rates or enter rates manually → Preview PDF → inspect all pages → approve and download the exact previewed PDF. Any edit resets approval. Requested items require an exclusion reason if removed. Full original requirements and exclusions travel into the PDF. Manual items and design choices remain available.
 
-Do not make the Sheet public or expose a GET endpoint returning leads. GitHub Pages cannot safely hold a shared secret. Direct live lookup/writeback is a planned authenticated feature, not implemented here. For that phase: Google OAuth identity + allowlisted staff on a backend; read one authorised lead; versioned quote table; immutable PDF snapshots in private Drive; record quote status and Drive file ID back to the Sheet. Never identify an authorised user merely by a ticket number.
+Older leads are free text, not structured BOQs. Recognised name/quantity/unit lines prefill fields; ambiguous quantities stay blank. No materials are invented and no lines are silently truncated. Complete-list mode adds item totals; alternative mode compares options without adding them together. Allocate freight once across items.
 
-## PDF workflow
+## PDF fidelity
 
-Complete prices/specifications and confirm the review checkbox → Download PDF. A finished A4 PDF downloads without a print dialog. PDF text currently supports English/Latin; other scripts are rejected explicitly pending proper font/shaping support. Inspect every page before sharing. Long text can produce additional pages. Keep photos within 5 MB each. The app does not generate or pretend to have real installation photography.
+The old HTML renderer has been removed. A PDF iframe displays the actual export. Cover images use a centred cover crop and swatches keep their original aspect ratio. Fonts are DM Sans and Instrument Serif, locally served after verified build-time download; licenses are in FONT-LICENSES.md. English/Latin is supported; Gujarati shaping is not yet supported. If a browser cannot display an embedded PDF, use Open full PDF preview.
 
-## Separate GitHub hosting
+## Privacy and automation
 
-For a separate repository named `ratan-brochure-generator`, copy this directory's HTML/CSS/JS (and optional assets) to its root; enable Pages for main/root. No build needed. The app can also be served at `/project-ratan/brochure/`. Do not commit downloaded drafts or customer PDF files. `noindex` discourages search indexing; it is NOT access control. The static shell is public, customer data is not embedded. Restrict the whole app behind authenticated hosting when adding live data.
-
-## Next operational decisions
-
-Choose the staff Google accounts allowed to retrieve leads; confirm quotation numbering policy, tax handling and approved terms; supply licensed installation/product photos. GST invoices, automated sending, supplier purchase orders and payment collection are out of scope for this prototype.
+Customer fields are not stored in URLs, analytics or local storage. Explicit private JSON/PDF downloads contain personal data: never commit them. The optional Sheet export menu remains available but is not needed after live staff lookup is activated. Automatic sending, stored quote approvals/revisions and staff notifications are not implemented; the activation guide specifies required approval, recipient and idempotency controls. There are no sending scopes or credentials in this build.

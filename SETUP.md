@@ -16,6 +16,8 @@ The Enquiries tab has17 columns including Lead ID, Type, Business, Timeline, Con
 
 ## PDF proposals
 
+**Latest:** /brochure/ now routes to the Google staff sign-in gateway, pending the new owner deployment. Use internal/SETUP.md for current protected-studio setup; the earlier manual workflow below applies inside that app. Reference lookup and PriceBook suggestions are prepared but not live until its private allowlist and deployment are configured. Approval now requires Preview PDF first, and downloads that exact file.
+
 Open /brochure/, enter reference/customer/expiry, choose alternatives and actual prices, review specifications/tax/delivery, check the review box, then Download PDF. A finished A4 file downloads directly; no printing required. Keep a private JSON draft for revisions. Customer data stays in-browser unless explicitly exported. Never commit customer PDFs/drafts.
 
 Optional Sheet handoff: add brochure/sheet-menu.gs as a SEPARATE script file, merge any existing onOpen, reload the Sheet, select a lead → Ratan → Export selected enquiry. Import its JSON into the studio. Menu installation is not done remotely. This is not live synchronisation; authenticated staff lookup/writeback is a later feature. Do not publish lead rows via a public GET endpoint.

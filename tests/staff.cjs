@@ -1,0 +1,12 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+let identity='',reads=0;
+const header=['Received at','Name','Phone','Requirement','Quantity / project size','Location','Source','Lead ID','Type','Business','Timeline','Consent','Status','Owner','Next follow-up','Notes','Reference'];
+const row=['','TEST CUSTOMER','','Plywood: 12 sheets — 18mm','','Ahmedabad','','id','Material list','','','','','','','','RATAN-TEST-001'];
+const sheet={getLastRow:()=>2,getRange:(r,c,n,w)=>({getDisplayValues:()=>[r===1?header:row],createTextFinder:ref=>({matchEntireCell(){return this;},matchCase(){return this;},findAll:()=>ref==='RATAN-TEST-001'?[{getRow:()=>2}]:[]})})};
+const context={Session:{getActiveUser:()=>({getEmail:()=>identity})},PropertiesService:{getScriptProperties:()=>({getProperty:key=>key==='RATAN_ALLOWED_STAFF'?'staff@example.test':'sheet-id'})},SpreadsheetApp:{openById:()=>{reads++;return{getSheetByName:name=>name==='Enquiries'?sheet:null};}},HtmlService:{createHtmlOutput:html=>html,createHtmlOutputFromFile:()=>({setTitle:()=> 'protected studio'})}};
+vm.createContext(context);vm.runInContext(fs.readFileSync(require('path').join(__dirname,'../internal/Code.gs'),'utf8'),context);
+assert.throws(()=>context.ratanGetEnquiry('RATAN-TEST-001'),/Access denied/);assert.equal(reads,0);
+identity='outsider@example.test';assert.throws(()=>context.ratanGetPriceSuggestions([]),/Access denied/);assert.equal(reads,0);
+identity='staff@example.test';assert.equal(context.doGet(),'protected studio');assert.equal(context.ratanGetEnquiry('RATAN-TEST-001').customer,'TEST CUSTOMER');assert.throws(()=>context.ratanGetEnquiry('RATAN-UNKNOWN-001'),/No matching/);assert.throws(()=>context.ratanGetEnquiry('../all'),/complete enquiry/);assert.equal(context.ratanGetPriceSuggestions([]).suggestions.length,0);
+const req=require('../brochure/requirements.js');assert.equal(req.parseRequirement('Plywood: 5 sheets — BWP\nPaint').length,2);assert.throws(()=>req.parseRequirement(Array(101).fill('item').join('\n')),/discarded/);
+console.log('PASS: signed-out/unauthorised denial before reads, authorised exact lookup, missing refs, absent pricebook and no dropped legacy requirement lines');

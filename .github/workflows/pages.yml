@@ -27,6 +27,7 @@ jobs:
           npm install --prefix tests --ignore-scripts
           node tests/flows.cjs
           node tests/pdf.cjs
+          node tests/staff.cjs
       - name: Prepare public website
         run: |
           mkdir -p _site
@@ -34,6 +35,10 @@ jobs:
           cp -R assets _site/assets
           cp -R brochure _site/brochure
           rm _site/brochure/sheet-menu.gs
+          curl --fail --location --retry 3 'https://raw.githubusercontent.com/google/fonts/23e54b51ddffbc7713c583748e3bd86f62b1fa4a/ofl/instrumentserif/InstrumentSerif-Regular.ttf' -o _site/brochure/assets/InstrumentSerif-Regular.ttf
+          curl --fail --location --retry 3 'https://raw.githubusercontent.com/google/fonts/23e54b51ddffbc7713c583748e3bd86f62b1fa4a/ofl/dmsans/DMSans%5Bopsz%2Cwght%5D.ttf' -o _site/brochure/assets/DMSans.ttf
+          test "$(git hash-object _site/brochure/assets/InstrumentSerif-Regular.ttf)" = "36fac00ef9b7d523236df6536cb09c712bb2c7e4"
+          test "$(git hash-object _site/brochure/assets/DMSans.ttf)" = "c672f98060af9b2c85fca704ebd5ad9a8717c1df"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

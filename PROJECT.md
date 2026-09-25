@@ -49,6 +49,7 @@ Private working inbox: ../feedback/OPUS-FEEDBACK.md (excluded from website publi
 - Verified test enquiry in Sheets row 2; receiver then served older seven-column implementation.
 
 ## Pending owner inputs
+- Staff Studio: create the separate protected Apps Script project, privately set approved staff and Sheet ID, deploy as the accessing Google user, and provide its /exec URL. See internal/SETUP.md. Do not change the public enquiry receiver.
 - Current status is maintained in [REQUESTS-AND-CHANGELOG.md](REQUESTS-AND-CHANGELOG.md), superseding stale historical receipt/access notes above.
 - Receiver access was corrected and confirmed with test rows; Opus feedback has been reviewed in OPUS-REVIEW.md.
 - Delivery guarantee terms; supplier asset usage rights; domain and renewal budget; further catalogues; genuine business photos/hours; notification recipient.

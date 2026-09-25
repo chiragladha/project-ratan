@@ -1,5 +1,23 @@
 # Ratan — consolidated request ledger, QC and release log
 
+## Latest update — staff studio revision (26 September)
+
+This section supersedes older brochure-status rows below.
+
+| New request | Implementation / activation status |
+| --- | --- |
+| Password or access protection | Owner chose Google sign-in. Separate Apps Script staff app prepared with allowlist and identity check on every read; public brochure URL becomes a sign-in gateway. **Activation pending** owner deployment, allowlist and /exec URL. Not claimed live-authenticated yet. No password/token embedded in public code. |
+| Main-site font match | DM Sans and Instrument Serif packaged from pinned Google Fonts TTFs; used by studio UI and PDF exporter. |
+| Preview/PDF discrepancy | Removed the independent HTML brochure preview. Preview PDF displays the actual bytes downloaded after approval; edits invalidate approval. Cover fills/crops its own frame; swatches preserve proportions. |
+| Reference-driven items | Staff backend performs exact private lookup; UI imports every non-empty legacy requirement line, prefills recognised quantities/units, retains original brief, preserves manual item/design editing. **Live lookup pending staff deployment.** |
+| Prevent missed items | Coverage list and required exclusion reasons; exclusions included in PDF. No silent six-item truncation. Ambiguous legacy quantities remain blank for review. |
+| Auto-fetch rates | Optional private PriceBook reader prepared; exact current specification/unit/currency matches only, no manual price overwrite. **Needs owner-populated PriceBook and staff deployment.** |
+| Approval/send automation | Exact-preview approval and download implemented. Automatic customer sending, durable quote revisions, recipient validation, retries and audit log **not activated**; scoped in internal/SETUP.md. No email/WhatsApp sending permissions added. |
+| Contact query entry | Permanent Ask Ratan icon/button added to Contact while the floating shortcut remains hidden there. Opens the existing callback form. |
+| Future-reference documentation | internal/SETUP.md is the authoritative setup/automation checklist; this ledger records pending activation separately from tested source. |
+
+Tests: source-level denial before Sheet reads for missing/non-allowlisted identities; exact reference matching; unknown/duplicate handling; every-line import; explicit exclusions; enquiry regression suite; PDF binary/pagination. Live account-permission testing cannot be completed until the owner deploys the private app. Do not treat mock tests as Google deployment verification.
+
 Updated 25 September 2026. Implementation, publication and business readiness are different states. No private Opus prompt or customer records belong in this public repository.
 
 ## Implemented
