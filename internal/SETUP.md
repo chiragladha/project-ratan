@@ -1,12 +1,14 @@
 # Ratan Staff Studio — activation checklist
 
-## Status: prepared, not yet deployed
+## Status: deployed; final integration checks in progress
 
-Google sign-in and live lookup need a NEW Apps Script deployment. The public brochure address is a sign-in gateway with a clear setup-pending state until that URL is configured. The staff UI is not included in the public Pages artifact. Repository source remains public; source visibility is not permission to read private leads.
+25 September: the separate Ratan Staff Studio Apps Script project was created and deployed by the assistant. Google execution is User accessing the web app, access is Only myself, and a private allowlist contains only the owner-approved account. The public enquiry receiver was not modified. The first live lookup exposed SpreadsheetApp requiring write scope; the reader was migrated to Advanced Sheets v4, retaining spreadsheets.readonly. No edit or sending scope was added. Subsequent verification is recorded in REQUESTS-AND-CHANGELOG.md.
+
+The separate Google deployment now exists and its URL is configured. The staff UI is not included in the public Pages artifact. Repository source remains public; source visibility is not permission to read private leads. The steps below are retained for maintenance/recovery, not work the owner still needs to repeat.
 
 Do not replace the existing public enquiry receiver. That would break customer submissions or risk exposing staff functions.
 
-## Owner steps (one-time)
+## Deployment recipe (already performed; retained for maintenance)
 
 1. Create a separate Google Apps Script project named **Ratan Staff Studio**.
 2. Paste `internal/Code.gs` into Code.gs. Add an HTML file named **Studio** and paste `internal/Studio.html` into it.
@@ -16,7 +18,7 @@ Do not replace the existing public enquiry receiver. That would break customer s
 6. Give me the new /exec URL so I can set `brochure/staff-config.js`. The URL is public routing, not a secret. Never paste a password/token there.
 7. Test with an allowed account, a signed-out window, and a non-allowlisted account. Only the allowed account should see the studio or successfully call lookup/price functions. Test a known reference and an unknown reference. Verify that the public enquiry form still saves normally.
 
-These owner/account steps are not marked complete until tested on the actual deployment. Runtime-only unit tests do not establish Google account configuration.
+The initial deployment uses Only myself at Google's access layer as well as the private allowlist. Adding more staff later requires explicit owner approval, an access-setting update and private Sheet permission for each staff member. Runtime-only unit tests do not establish Google account configuration. The manifest enables Advanced Sheets v4 because SpreadsheetApp.openById requires a broader scope; do not reintroduce it while promising read-only access.
 
 ## Requirements are retained
 

@@ -1,5 +1,14 @@
 # Ratan — consolidated request ledger, QC and release log
 
+## Google staff access activated — 25 September 2026
+
+- Assistant created and deployed the separate Ratan Staff Studio project, version 2. The public customer receiver was not touched.
+- Google execution: User accessing the web app. Google access: Only myself. Private Script Properties contain the workbook target and the single owner-approved staff identity; neither staff email lists nor credentials are committed here.
+- Live studio displayed the approved signed-in identity. Private lookup of an existing DO NOT CALL QC enquiry succeeded and loaded all three non-empty requirement lines and the test customer name. No new lead or customer message was created.
+- Live testing caught SpreadsheetApp.openById requiring write permission; replaced it with Advanced Sheets v4, preserving identity + spreadsheets.readonly scopes. Code and mock tests updated accordingly.
+- Public brochure gateway is configured to the protected deployment. Authenticated lookup is now activated; the earlier setup-pending rows are historical.
+- Remaining: populate a reviewed PriceBook, multi-staff onboarding if requested, automated quote sending/revision storage, Gujarati PDF shaping. Signed-out and a separate non-owner account have not been exercised in a live session; Google Only myself access was inspected, and deny-before-read behavior is unit-tested.
+
 ## Latest update — staff studio revision (26 September)
 
 This section supersedes older brochure-status rows below.

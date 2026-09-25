@@ -4,7 +4,7 @@ The public /brochure/ URL is now a Google staff sign-in gateway. The protected a
 
 ## Activation status
 
-Prepared and unit-tested, not yet deployed to Google. Owner must create a SEPARATE Apps Script project, configure the private allowlist/Sheet ID, deploy executing as User accessing the web app, and provide the /exec URL for staff-config.js. Do not replace the public enquiry receiver. No fake client-side password gate is used; source remains public while private reads require server checks.
+Deployed as a SEPARATE Apps Script project on 25 September 2026, executing as User accessing the web app. Google access is Only myself and the private allowlist contains only the account approved by the owner. The gateway URL is configured. The public enquiry receiver was not changed. No fake client-side password gate is used; source remains public while private reads require server checks. Final live-check results are recorded in REQUESTS-AND-CHANGELOG.md.
 
 ## Workflow
 
